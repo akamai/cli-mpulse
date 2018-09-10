@@ -33,8 +33,9 @@ import json
 import mpulse_helper
 
 #setup logging
-logger = logging.getLogger("mpulse_wrapper.py")
+logger = logging.getLogger("mpulse")
 logging.basicConfig()
+logger.addHandler(logging.StreamHandler())
 logging.getLogger().setLevel(logging.ERROR)
 
 
