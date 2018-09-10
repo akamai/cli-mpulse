@@ -35,7 +35,7 @@ import mpulse_helper
 #setup logging
 logger = logging.getLogger("mpulse_wrapper.py")
 logging.basicConfig()
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.ERROR)
 
 
 def getApiResponse(token, args):
