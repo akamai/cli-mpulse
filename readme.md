@@ -3,10 +3,10 @@
 The python scripts are wrapper for [mPulse Query API](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html). 
 
 ## Usage
-To use the command, simply invoke the `mpulse_cli.py` command with the right set of options. 
+To use the command, simply invoke the `akamai-mpulse` command with the right set of options. 
 
 ```
-usage: mpulse_cli.py [-h] [--config CONFIG] [--section SECTION] --api_key
+usage: akamai-mpulse [-h] [--config CONFIG] [--section SECTION] --api_key
                      API_KEY [--timer TIMER]
                      ...
 
