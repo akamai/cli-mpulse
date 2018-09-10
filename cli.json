@@ -1,0 +1,13 @@
+{
+  "requirements": {
+    "python": "3.0.0"
+  },
+  "commands": [
+    {
+      "name": "mpulse",
+      "aliases": ["mp"],
+      "version": "0.1.0",
+      "description": "Get mPulse reports for your applications"
+    }
+  ]
+}
