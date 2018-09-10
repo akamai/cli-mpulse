@@ -16,7 +16,7 @@ import json
 #setup logging
 logger = logging.getLogger("config.py")
 logging.basicConfig()
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.ERROR)
 #class MpulseConfig()
 
 def getCredentials(config_file, section_name):
