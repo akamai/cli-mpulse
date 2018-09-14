@@ -1,3 +1,6 @@
+import time
+import calendar
+
 '''
 Helper function for running the mPulse REST API
 '''
@@ -43,3 +46,8 @@ def cleanup_arguments(arguments):
 	arguments.pop('startdate', None)
 	arguments.pop('enddate', None)
 	return arguments
+
+def check_age(file_timestamp):
+	#get the current timestamp
+	current_timestamp = calendar.timegm(time.gmtime())
+	return (current_timestamp - file_timestamp)
