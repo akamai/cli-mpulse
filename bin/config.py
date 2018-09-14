@@ -17,7 +17,7 @@ import mpulse_helper
 #setup logging
 logger = logging.getLogger("config.py")
 logging.basicConfig()
-logging.getLogger().setLevel(logging.DEBU)
+logging.getLogger().setLevel(logging.DEBUG)
 #class MpulseConfig()
 
 def getCredentials(config_file, section_name):
