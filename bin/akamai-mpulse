@@ -107,4 +107,5 @@ if __name__=="__main__":
     logger.debug(token)
 
     ## now fire the API call
-    getApiResponse(token, args)    
+    response = getApiResponse(token, args)    
+    print(json.dumps(response, indent=4))
