@@ -86,8 +86,15 @@ def getToken(config_file, section):
     '''
         Takes the apitoken and tenant as input parameter and responds back with a security token that is created.
     '''
+    token = {}
+
     settings = getCredentials(config_file, section)
-    token = generateToken(settings['apitoken'], settings['tenant'])
+
+    if settings != {}:
+        token = generateToken(settings['apitoken'], settings['tenant'])   
+    else:
+        logger.error("Unable to generate a token.") 
+    
     return token
 
 if __name__=="__main__":    

@@ -73,17 +73,17 @@ def getApiResponse(token, args):
 	headers = {"Authentication": token["token"]}
 
 	#build the final api endpoint
-	api_endpoint = base_url + args.api_key + function + "?" + "&".join(mpulse_helper.build_query_string(query_arguments))
+	api_endpoint = base_url + args.api + function + "?" + "&".join(mpulse_helper.build_query_string(query_arguments))
 	
 	logging.debug("API URL: " + api_endpoint)
 	response = {}
 
 	#make the call and send back the response
 	try:
-		response = requests.get(api_endpoint, headers = headers)
-		if response.status_code == 200:
-			logger.info(json.dumps(response.json(),indent=2))	
-			response = response.json()		
+		http_response = requests.get(api_endpoint, headers = headers)
+		if http_response.status_code == 200:			
+			response = http_response.json()		
+			logger.info(json.dumps(response,indent=2))	
 	except Exception as e:
 		logging.error(str(e))
 	
@@ -107,7 +107,7 @@ def cli():
         prog=prog)
     parser.add_argument('--config', help='mPulse configuration file containing the user\'s API key (deault=~/.mpulse)',default="~/.mpulse")
     parser.add_argument('--section', help='Section within the config file containing the credentials (default=[mpulse])',default='mpulse')
-    parser.add_argument('--api_key', help='API key of the app',required=True) 
+    parser.add_argument('--api', help='API key of the app',required=False) 
     parser.add_argument('--timer', help='The timer to report (default=page load time)', default='PageLoad')
     #gather up reminder
     parser.add_argument('args', nargs=argparse.REMAINDER)
@@ -116,6 +116,10 @@ def cli():
     if len(sys.argv) <= 1:
         parser.print_help()
         return 0
+
+    if 'api' not in args or args.api=="":
+    	parser.print_help()
+    	return 0
 
     logger.debug('Configuration file: ' + args.config)
     logger.debug('Configuration section: ' + args.section)
@@ -126,36 +130,19 @@ def cli():
     logger.debug(token)  
 
     ## now fire the API call
-    response = getApiResponse(token, args)    
-    print(json.dumps(response, indent=4))
+    if token!= {}: 
+	    response = getApiResponse(token, args)	    
+	    if response!={}:    
+	    	print(json.dumps(response, indent=4))
+	    else:
+	    	print(str(response))
+
     return 0
 
 
 
 if __name__=="__main__":    
-	status = 0
-	"""
-    parser = argparse.ArgumentParser(description='CLI for mPulse Query API. For more information about the API, please refer to https://developer.akamai.com/api/web_performance/mpulse_query/v2.html' )
-    parser.add_argument('--config', help='mPulse configuration file containing the user\'s API key (deault=~/.mpulse)',default="~/.mpulse")
-    parser.add_argument('--section', help='Section within the config file containing the credentials (default=[mpulse])',default='mpulse')
-    parser.add_argument('--api', help='API key of the app',required=True) 
-    parser.add_argument('--timer', help='The timer to report (default=page load time)', default='PageLoad')
-    #gather up reminder
-    parser.add_argument('args', nargs=argparse.REMAINDER)
-
-    args = parser.parse_args()
-    logger.debug('Configuration file: ' + args.config)
-    logger.debug('Configuration section: ' + args.section)
-    logger.debug(args)
-
-    ## first create a security token
-    token = config.getToken(args.config,args.section)    
-    logger.debug(token)
-
-    ## now fire the API call
-    response = getApiResponse(token, args)    
-    print(json.dumps(response, indent=4))
-	"""
+	status = 0	
 	try:
 		status = cli()
 		exit(status)
