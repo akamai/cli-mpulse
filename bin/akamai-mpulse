@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Copyright 2018 Akamai Technologies, Inc. All Rights Reserved.
 
@@ -31,6 +32,7 @@ import logging
 import requests
 import json
 import mpulse_helper
+import os
 
 #setup logging
 logger = logging.getLogger("mpulse")
@@ -87,12 +89,56 @@ def getApiResponse(token, args):
 	
 	return response		
 
-if __name__=="__main__":    
+def get_prog_name():
+    prog = os.path.basename(sys.argv[0])
+    if os.getenv("AKAMAI_CLI"):
+        prog = "akamai mpulse"
+    return prog
 
-    parser = argparse.ArgumentParser(description='CLI for mPulse Query API. For more information about the API, please refer to https://developer.akamai.com/api/web_performance/mpulse_query/v2.html' )
+
+def cli():
+    prog = get_prog_name()
+    if len(sys.argv) == 1:
+        prog += " [command]"
+
+    parser = argparse.ArgumentParser(
+        description='CLI for mPulse Query API. For more information about the API, please refer to https://developer.akamai.com/api/web_performance/mpulse_query/v2.html',
+        add_help=False,
+        prog=prog)
     parser.add_argument('--config', help='mPulse configuration file containing the user\'s API key (deault=~/.mpulse)',default="~/.mpulse")
     parser.add_argument('--section', help='Section within the config file containing the credentials (default=[mpulse])',default='mpulse')
     parser.add_argument('--api_key', help='API key of the app',required=True) 
+    parser.add_argument('--timer', help='The timer to report (default=page load time)', default='PageLoad')
+    #gather up reminder
+    parser.add_argument('args', nargs=argparse.REMAINDER)
+
+    args = parser.parse_args()
+    if len(sys.argv) <= 1:
+        parser.print_help()
+        return 0
+
+    logger.debug('Configuration file: ' + args.config)
+    logger.debug('Configuration section: ' + args.section)
+    logger.debug(args)
+
+    ## first create a security token
+    token = config.getToken(args.config,args.section)    
+    logger.debug(token)  
+
+    ## now fire the API call
+    response = getApiResponse(token, args)    
+    print(json.dumps(response, indent=4))
+    return 0
+
+
+
+if __name__=="__main__":    
+	status = 0
+	"""
+    parser = argparse.ArgumentParser(description='CLI for mPulse Query API. For more information about the API, please refer to https://developer.akamai.com/api/web_performance/mpulse_query/v2.html' )
+    parser.add_argument('--config', help='mPulse configuration file containing the user\'s API key (deault=~/.mpulse)',default="~/.mpulse")
+    parser.add_argument('--section', help='Section within the config file containing the credentials (default=[mpulse])',default='mpulse')
+    parser.add_argument('--api', help='API key of the app',required=True) 
     parser.add_argument('--timer', help='The timer to report (default=page load time)', default='PageLoad')
     #gather up reminder
     parser.add_argument('args', nargs=argparse.REMAINDER)
@@ -109,3 +155,9 @@ if __name__=="__main__":
     ## now fire the API call
     response = getApiResponse(token, args)    
     print(json.dumps(response, indent=4))
+	"""
+	try:
+		status = cli()
+		exit(status)
+	except KeyboardInterrupt:
+		exit(1)
