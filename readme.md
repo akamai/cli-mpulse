@@ -6,9 +6,9 @@ The python scripts are wrapper for [mPulse Query API](https://developer.akamai.c
 To use the command, simply invoke the `akamai-mpulse` command with the right set of options. 
 
 ```
-usage: akamai-mpulse [-h] [--config CONFIG] [--section SECTION] --api_key
-                     API_KEY [--timer TIMER]
-                     ...
+usage: akamai-mpulse [command] [--config CONFIG] [--section SECTION]
+                               [--api API] [--timer TIMER]
+                               ...
 
 CLI for mPulse Query API. For more information about the API, please refer to
 https://developer.akamai.com/api/web_performance/mpulse_query/v2.html
@@ -17,12 +17,11 @@ positional arguments:
   args
 
 optional arguments:
-  -h, --help         show this help message and exit
   --config CONFIG    mPulse configuration file containing the user's API key
                      (deault=~/.mpulse)
   --section SECTION  Section within the config file containing the credentials
                      (default=[mpulse])
-  --api_key API_KEY  API key of the app
+  --api API          API key of the app
   --timer TIMER      The timer to report (default=page load time)
 ```
 
