@@ -23,7 +23,7 @@ def get_query_date(arguments):
 		date-comparator=LastHour
 	'''
 	query_arguments = {}
-	if 'date-comparator' not in arguments and 'date' not in arguments:
+	if 'date-comparator' not in arguments and ('date' not in arguments or ('date-start' not in arguments and 'date-end' not in arguments) ):
 		#nothing specific is given. simply use LastHour
 		query_arguments["date-comparator"] = "LastHour"
 	else:
@@ -31,8 +31,14 @@ def get_query_date(arguments):
 		if 'date' in arguments:
 			query_arguments["date"] = arguments["date"]
 		else:
-			if 'date-compartor' in arguments['date-comparator']:
+			if 'date-comparator' in arguments:
 				query_arguments['date-comparator'] = arguments['date-comparator']
+
+			#check if date-start and date-end have been provided as well
+			if 'date-start' in arguments and 'date-end' in arguments:
+				query_arguments['date-start'] = arguments['date-start']
+				query_arguments['date-end'] =arguments['date-end']
+				query_arguments['date-comparator'] = 'Between'
 	return query_arguments
 
 def cleanup_arguments(arguments):
@@ -43,8 +49,8 @@ def cleanup_arguments(arguments):
 	arguments.pop('type', None)
 	arguments.pop('date-comparator', None)
 	arguments.pop('date', None)
-	arguments.pop('startdate', None)
-	arguments.pop('enddate', None)
+	arguments.pop('date-start', None)
+	arguments.pop('date-end', None)
 	return arguments
 
 def check_age(file_timestamp):
