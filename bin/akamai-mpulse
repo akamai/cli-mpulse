@@ -83,7 +83,10 @@ def getApiResponse(token, args):
 		http_response = requests.get(api_endpoint, headers = headers)
 		if http_response.status_code == 200:			
 			response = http_response.json()		
-			logger.info(json.dumps(response,indent=2))	
+			logger.info(json.dumps(response,indent=2))
+		else:
+			logger.error("HTTP Error" + str(http_response.status_code))	
+			logger.error(http_response.read())
 	except Exception as e:
 		logging.error(str(e))
 	
