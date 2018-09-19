@@ -76,22 +76,26 @@ By default, the command fetches the _PageLoad_ for the last 1 hour.
 By adding the `date-comparator` with one of the following value, you should get the default metric (_PageLoad_) for the duration. See the [date parameters](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html#Parameters) for list of values.
 
 Here's the command to get the data for last 12 hours.
+
 	akamai mpulse --api XXXXX-XXXXX-XXXXX-XXXXX-XXXXX date-comparator=Last12Hours
 
 ### Get different timer
 By default, we get the summary for _PageLoad_. You can use the `timer` to get other metrics as described in [timer parameters](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html#TimerParameters). 
 
 Here's the command to get the `DomLoad` metric.
+
 	akamai mpulse --api XXXXX-XXXXX-XXXXX-XXXXX-XXXXX timer=DomLoad
 
 ### Drill down
 You could drill down the data by using the [dimension paraeters](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html#TimerParameters)	and group the result by using the [metrics by dimension](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html#DimensionParameters) parameters.
 
 To filter the summary data for just the US geography, you can use this:
+
 	akamai mpulse --api XXXXX-XXXXX-XXXXX-XXXXX-XXXXX country=US
 
 ## Using JQ
 I normally like to filter the output with [JQ](https://stedolan.github.io/jq/). This will allow for quicker parsing and extraction of specific fields. For example, if you just require the value for the median every hour, you could use this command:
+
 	akamai mpulse --api XXXXX-XXXXX-XXXXX-XXXXX-XXXXX | jq '.median'
 
 Hope this is useful and I'd love to hear feedback!
