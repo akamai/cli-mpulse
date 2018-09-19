@@ -87,7 +87,7 @@ Here's the command to get the `DomLoad` metric.
 	akamai mpulse --api XXXXX-XXXXX-XXXXX-XXXXX-XXXXX timer=DomLoad
 
 ### Drill down
-You could drill down the data by using the [dimension paraeters](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html#TimerParameters)	and group the result by using the [metrics by dimension](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html#DimensionParameters) parameters.
+You could drill down the data by using the [dimension parameters](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html#TimerParameters)	and group the result by using the [metrics by dimension](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html#DimensionParameters) parameters.
 
 To filter the summary data for just the US geography, you can use this:
 
