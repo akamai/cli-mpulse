@@ -1,5 +1,6 @@
 import time
 import calendar
+import urllib
 
 '''
 Helper function for running the mPulse REST API
@@ -10,10 +11,8 @@ def build_query_string(query_arguments):
 		Takes the input as a dictionary and returns a list of 'name=value' result. 
 		This will be used later to build the final set of query string.
 	'''
-	query_string_list = []
-	for each_key in query_arguments:
-		query_string_list.append(each_key+'='+query_arguments[each_key])
-	return query_string_list
+	
+	return urllib.urlencode(query_arguments)
 
 def get_query_date(arguments):
 	'''

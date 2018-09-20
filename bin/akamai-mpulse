@@ -33,6 +33,7 @@ import requests
 import json
 import mpulse_helper
 import os
+import urllib
 
 #setup logging
 logger = logging.getLogger("mpulse")
@@ -73,7 +74,7 @@ def getApiResponse(token, args):
 	headers = {"Authentication": token["token"]}
 
 	#build the final api endpoint
-	api_endpoint = base_url + args.api + function + "?" + "&".join(mpulse_helper.build_query_string(query_arguments))
+	api_endpoint = base_url + args.api + function + "?" + mpulse_helper.build_query_string(query_arguments)
 	
 	logging.debug("API URL: " + api_endpoint)
 	response = {}
