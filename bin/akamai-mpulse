@@ -113,6 +113,7 @@ def cli():
     parser.add_argument('--section', help='Section within the config file containing the credentials (default=[mpulse])',default='mpulse')
     parser.add_argument('--api', help='API key of the app',required=False) 
     parser.add_argument('--timer', help='The timer to report (default=page load time)', default='PageLoad')
+    parser.add_argument('--json', help='Force JSON response', required=False,action='store_true')
     #gather up reminder
     parser.add_argument('args', nargs=argparse.REMAINDER)
 
@@ -136,8 +137,11 @@ def cli():
     ## now fire the API call
     if token!= {}: 
 	    response = getApiResponse(token, args)	    
-	    if response!={}:    
-	    	print(json.dumps(response, indent=4))
+	    if response!={}:
+			if args.json == True:
+				print(json.dumps(response, indent=2))
+			else:
+				print(response)
 	    else:
 	    	print(str(response))
 
