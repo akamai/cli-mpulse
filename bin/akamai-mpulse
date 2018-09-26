@@ -141,7 +141,7 @@ def cli():
 			if args.json == True:
 				print(json.dumps(response, indent=2))
 			else:
-				print(response)
+				mpulse_helper.print_response(response)
 	    else:
 	    	print(str(response))
 

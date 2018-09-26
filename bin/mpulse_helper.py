@@ -1,6 +1,7 @@
 import time
 import calendar
 import urllib
+import json
 
 '''
 Helper function for running the mPulse REST API
@@ -56,3 +57,26 @@ def check_age(file_timestamp):
 	#get the current timestamp
 	current_timestamp = calendar.timegm(time.gmtime())
 	return (current_timestamp - file_timestamp)
+
+def print_response(response):
+	'''
+		This function tried to print a human friendly format of the API response.
+		For typical calls like summary, etc, the response will contain the median, 95th percentile and so on.
+		For some special calls when such data is not available, the response is to dumpt th eJSON
+	'''
+	if 'median' in response and 'p98' in response and 'p95' in response and 'moe' in response and 'n' in response:
+		response['median'] = float(response['median']) / 1000
+		response['p95'] = float(response['p95']) / 1000
+		response['p98'] = float(response['p98']) / 1000
+		response['moe'] = float(response['moe']) / 1000
+
+
+		print("------------------------------------------------------")
+		print("Total beacons: " + str(response['n']))		
+		print("Median: " + str( response['median'] ) + " s" )
+		print("95th Percentile: " + str( response['p95'] ) + " s")
+		print("98th Percentile: " + str( response['p98'] ) + " s")
+		print("Margin of Error: " + str( response['moe'] ) + " s")
+		print("------------------------------------------------------")
+	else:
+		print(json.dumps(response, indent=2))
