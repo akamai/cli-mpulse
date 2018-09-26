@@ -109,7 +109,7 @@ def cli():
         description='CLI for mPulse Query API. For more information about the API, please refer to https://developer.akamai.com/api/web_performance/mpulse_query/v2.html',
         add_help=False,
         prog=prog)
-    parser.add_argument('--config', help='mPulse configuration file containing the user\'s API key (deault=~/.mpulse)',default="~/.mpulse")
+    parser.add_argument('--config', help='mPulse configuration file containing the user\'s API key (default=~/.edgerc)',default="~/.edgerc")
     parser.add_argument('--section', help='Section within the config file containing the credentials (default=[mpulse])',default='mpulse')
     parser.add_argument('--api', help='API key of the app',required=False) 
     parser.add_argument('--timer', help='The timer to report (default=page load time)', default='PageLoad')

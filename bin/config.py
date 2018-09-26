@@ -90,8 +90,11 @@ def getToken(config_file, section):
 
     settings = getCredentials(config_file, section)
 
-    if settings != {}:
-        token = generateToken(settings['apitoken'], settings['tenant'])   
+    if settings != {}:        
+        if ('apitoken' in settings) and ('tenant' in settings):
+            token = generateToken(settings['apitoken'], settings['tenant']) 
+        else:
+            logger.error("Unable to find apiToken")  
     else:
         logger.error("Unable to generate a token.") 
     
