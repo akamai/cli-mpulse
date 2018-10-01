@@ -109,11 +109,13 @@ def cli():
         description='CLI for mPulse Query API. For more information about the API, please refer to https://developer.akamai.com/api/web_performance/mpulse_query/v2.html',
         add_help=False,
         prog=prog)
-    parser.add_argument('--config', help='mPulse configuration file containing the user\'s API key (default=~/.edgerc)',default="~/.edgerc")
+    parser.add_argument('--config', help='mPulse configuration file containing the user\'s API key (default=~/.mpulse)',default="~/.mpulse")
     parser.add_argument('--section', help='Section within the config file containing the credentials (default=[mpulse])',default='mpulse')
     parser.add_argument('--api', help='API key of the app',required=False) 
-    parser.add_argument('--timer', help='The timer to report (default=page load time)', default='PageLoad')
+    parser.add_argument('--timer', help='The timer to report (default=page load time)', default='PageLoad', choices=['PageLoad','FirstLastByte','FirstByte','DNS','TCP','SSL','DomLoad','DomReady','ClientRoundTripTime','TimeToInteractive','FirstInputDelay','TimeToFirstInteraction','TimeToVisuallyReady','FirstPaint','FirstContentfulPaint','LongTasksTime']) 
+    parser.add_argument('--date-comparator', help='Choose the way mPulse is going to report the data', default='LastHour', choices=['Last30Minutes','LastHour','Last3Hours','Last12Hours','Last24Hours','ThisWeek','ThisMonth','Last','Between'])
     parser.add_argument('--json', help='Force JSON response', required=False,action='store_true')
+    parser.add_argument('--verbose', help='Enable verbose output', required=False, action='store_true')
     #gather up reminder
     parser.add_argument('args', nargs=argparse.REMAINDER)
 
@@ -126,6 +128,9 @@ def cli():
     	parser.print_help()
     	return 0
 
+    if args.verbose == True:
+    	logging.getLogger().setLevel(logging.DEBUG)
+    
     logger.debug('Configuration file: ' + args.config)
     logger.debug('Configuration section: ' + args.section)
     logger.debug(args)
