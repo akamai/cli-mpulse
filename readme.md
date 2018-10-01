@@ -27,23 +27,35 @@ Note that the `tenant` section could be optional. This is only necessary if you 
 To use the command, simply invoke the `akamai-mpulse` command with the right set of options. 
 
 ```
-usage: akamai-mpulse [command] [--config CONFIG] [--section SECTION]
-                               [--api API] [--timer TIMER]
-                               ...
+usage: akamai-mpulse [-h] [--config CONFIG] [--section SECTION] [--api API]
+                     [--timer {PageLoad,FirstLastByte,FirstByte,DNS,TCP,SSL,DomLoad,DomReady,ClientRoundTripTime,TimeToInteractive,FirstInputDelay,TimeToFirstInteraction,TimeToVisuallyReady,FirstPaint,FirstContentfulPaint,LongTasksTime}]
+                     [--date_comparator {Last30Minutes,LastHour,Last3Hours,Last12Hours,Last24Hours,ThisWeek,ThisMonth,Last,Between}]
+                     [--type {summary,histogram,sessions-per-page-load-time,metric-per-page-load-time,by-minute,geography,page-groups,browsers,bandwidth,ab-tests,timers-metrics,metrics-by-dimension,dimension-values}]
+                     [--json] [--verbose] [--date DATE]
+                     [--date_start DATE_START] [--date_end DATE_END]
 
 CLI for mPulse Query API. For more information about the API, please refer to
 https://developer.akamai.com/api/web_performance/mpulse_query/v2.html
 
-positional arguments:
-  args
-
 optional arguments:
-  --config CONFIG    mPulse configuration file containing the user's API key
-                     (deault=~/.mpulse)
-  --section SECTION  Section within the config file containing the credentials
-                     (default=[mpulse])
-  --api API          API key of the app
-  --timer TIMER      The timer to report (default=page load time)
+  -h, --help            show this help message and exit
+  --config CONFIG       mPulse configuration file containing the user's API
+                        key (default=~/.mpulse)
+  --section SECTION     Section within the config file containing the
+                        credentials (default=[mpulse])
+  --api API             API key of the app
+  --timer {PageLoad,FirstLastByte,FirstByte,DNS,TCP,SSL,DomLoad,DomReady,ClientRoundTripTime,TimeToInteractive,FirstInputDelay,TimeToFirstInteraction,TimeToVisuallyReady,FirstPaint,FirstContentfulPaint,LongTasksTime}
+                        The timer to report (default=page load time)
+  --date_comparator {Last30Minutes,LastHour,Last3Hours,Last12Hours,Last24Hours,ThisWeek,ThisMonth,Last,Between}
+                        Choose the way mPulse is going to report the data
+  --type {summary,histogram,sessions-per-page-load-time,metric-per-page-load-time,by-minute,geography,page-groups,browsers,bandwidth,ab-tests,timers-metrics,metrics-by-dimension,dimension-values}
+                        Choose the type of report to execute (default=Summary)
+  --json                Force JSON response
+  --verbose             Enable verbose output
+  --date DATE           Date when the report is required
+  --date_start DATE_START
+                        Start Date and Time for the report
+  --date_end DATE_END   End Date and Time for the report
 ```
 
 The only _required_ parameter is the API key. 
@@ -77,16 +89,16 @@ By adding the `date-comparator` with one of the following value, you should get 
 
 Here's the command to get the data for last 12 hours.
 
-	akamai mpulse --api XXXXX-XXXXX-XXXXX-XXXXX-XXXXX date-comparator=Last12Hours
+	akamai mpulse --api XXXXX-XXXXX-XXXXX-XXXXX-XXXXX --date_comparator=Last12Hours
 
 ### Get different timer
 By default, we get the summary for _PageLoad_. You can use the `timer` to get other metrics as described in [timer parameters](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html#TimerParameters). 
 
 Here's the command to get the `DomLoad` metric.
 
-	akamai mpulse --api XXXXX-XXXXX-XXXXX-XXXXX-XXXXX timer=DomLoad
+	akamai mpulse --api XXXXX-XXXXX-XXXXX-XXXXX-XXXXX --timer=DomLoad
 
-### Drill down
+### Drill down (In-progress..)
 You could drill down the data by using the [dimension parameters](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html#TimerParameters)	and group the result by using the [metrics by dimension](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html#DimensionParameters) parameters.
 
 To filter the summary data for just the US geography, you can use this:
