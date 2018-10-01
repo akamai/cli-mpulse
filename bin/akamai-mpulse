@@ -42,7 +42,7 @@ logger.addHandler(logging.StreamHandler())
 logging.getLogger().setLevel(logging.ERROR)
 
 
-def getApiResponse(token, args):
+def getApiResponse(token, api, report_type, timer, date_comprator, date, date_start, date_end):
 	'''
 		Single wrapper for all the calls for mPulse Query API.
 		It takes the security token and the incoming arguments and the output is a JSON response.
@@ -50,22 +50,15 @@ def getApiResponse(token, args):
 	base_url = "https://mpulse.soasta.com/concerto/mpulse/api/v2/"
 
 	# extract arguments from the command line, including the command type
-	arguments = {}
-	if 'args' in args and args.args != None or args.args!="":		
-		for each_argument in args.args:
-			params = each_argument.strip().split("=")
-			if len(params) == 2:
-				arguments[params[0]] = params[1]
-	if 'type' not in arguments:
-		arguments['type'] = "summary"
+	arguments = {}		
+	#add the timer and date-comparator
+	arguments['timer'] = timer
 
-	function = '/' + arguments['type']
-	
-	query_arguments = mpulse_helper.get_query_date(arguments)
+	query_arguments = mpulse_helper.get_query_date(date_comprator, date, date_start, date_end)
 	query_arguments['format'] = 'json'
 	
 	# cleanup the list of "arguments" to remove the ones we already used
-	mpulse_helper.cleanup_arguments(arguments)	
+	mpulse_helper.cleanup_arguments(query_arguments)	
 	#merge the arguments dictionary to query_arguments dictionary. we'll use 'query_arguments' to build the final set of query strings
 	query_arguments.update(arguments)	
 	logger.debug("Arguments currently in list: " + str(query_arguments))
@@ -74,7 +67,7 @@ def getApiResponse(token, args):
 	headers = {"Authentication": token["token"]}
 
 	#build the final api endpoint
-	api_endpoint = base_url + args.api + function + "?" + mpulse_helper.build_query_string(query_arguments)
+	api_endpoint = base_url + api + '/' + report_type + "?" + mpulse_helper.build_query_string(query_arguments)
 	
 	logging.debug("API URL: " + api_endpoint)
 	response = {}
@@ -113,11 +106,15 @@ def cli():
     parser.add_argument('--section', help='Section within the config file containing the credentials (default=[mpulse])',default='mpulse')
     parser.add_argument('--api', help='API key of the app',required=False) 
     parser.add_argument('--timer', help='The timer to report (default=page load time)', default='PageLoad', choices=['PageLoad','FirstLastByte','FirstByte','DNS','TCP','SSL','DomLoad','DomReady','ClientRoundTripTime','TimeToInteractive','FirstInputDelay','TimeToFirstInteraction','TimeToVisuallyReady','FirstPaint','FirstContentfulPaint','LongTasksTime']) 
-    parser.add_argument('--date-comparator', help='Choose the way mPulse is going to report the data', default='LastHour', choices=['Last30Minutes','LastHour','Last3Hours','Last12Hours','Last24Hours','ThisWeek','ThisMonth','Last','Between'])
+    parser.add_argument('--date_comparator', help='Choose the way mPulse is going to report the data', default='LastHour', choices=['Last30Minutes','LastHour','Last3Hours','Last12Hours','Last24Hours','ThisWeek','ThisMonth','Last','Between'])
+    parser.add_argument('--type', help='Choose the type of report to execute (default=Summary)', default="summary", choices=['summary','histogram','sessions-per-page-load-time','metric-per-page-load-time','by-minute','geography','page-groups','browsers','bandwidth','ab-tests','timers-metrics','metrics-by-dimension','dimension-values'])
     parser.add_argument('--json', help='Force JSON response', required=False,action='store_true')
     parser.add_argument('--verbose', help='Enable verbose output', required=False, action='store_true')
+    parser.add_argument('--date', help="Date when the report is required", required=False, default=None)
+    parser.add_argument('--date_start', help="Start Date and Time for the report", required=False, default=None)
+    parser.add_argument('--date_end', help="End Date and Time for the report", required=False, default=None)
     #gather up reminder
-    parser.add_argument('args', nargs=argparse.REMAINDER)
+    #parser.add_argument('args', nargs=argparse.REMAINDER)
 
     args = parser.parse_args()
     if len(sys.argv) <= 1:
@@ -141,12 +138,12 @@ def cli():
 
     ## now fire the API call
     if token!= {}: 
-	    response = getApiResponse(token, args)	    
+	    response = getApiResponse(token, args.api, args.type, args.timer, args.date_comparator, args.date, args.date_start, args.date_end)
 	    if response!={}:
 			if args.json == True:
 				print(json.dumps(response, indent=2))
 			else:
-				mpulse_helper.print_response(response)
+				mpulse_helper.print_response(args.type, args.timer, args.date_comparator, args.date, args.date_start, args.date_end, response)							               
 	    else:
 	    	print(str(response))
 
