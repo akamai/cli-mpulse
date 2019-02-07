@@ -17,9 +17,9 @@ To work with this CLI, you will need 2 pieces of information:
 ### Working of the CLI
 mPulse API requires a security token to authenticate the requests. This security token is based on the API token associated with each user. This CLI assumes that the user's API token is included in a plain-text _ini_ like file. By default, the CLI assumes this file to be `~/.mpulse`. The format of the file should be as follows:
 
-[credential-section-name] 
-apiToken=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
-tenant=Customer
+    [credential-section-name] 
+    apiToken=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+    tenant=Customer
 
 Note that the `tenant` section could be optional. This is only necessary if you have access to more than one mPulse setup.
 
