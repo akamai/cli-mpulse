@@ -29,7 +29,7 @@ To use the command, simply invoke the `akamai-mpulse` command with the right set
 ```
 usage: akamai-mpulse [-h] [--config CONFIG] [--section SECTION] [--api API]
                      [--timer {PageLoad,FirstLastByte,FirstByte,DNS,TCP,SSL,DomLoad,DomReady,ClientRoundTripTime,TimeToInteractive,FirstInputDelay,TimeToFirstInteraction,TimeToVisuallyReady,FirstPaint,FirstContentfulPaint,LongTasksTime}]
-                     [--date_comparator {Last30Minutes,LastHour,Last3Hours,Last12Hours,Last24Hours,ThisWeek,ThisMonth,Last,Between}]
+                     [--date-comparator {Last30Minutes,LastHour,Last3Hours,Last12Hours,Last24Hours,ThisWeek,ThisMonth,Last,Between}]
                      [--type {summary,histogram,sessions-per-page-load-time,metric-per-page-load-time,by-minute,geography,page-groups,browsers,bandwidth,ab-tests,timers-metrics,metrics-by-dimension,dimension-values}]
                      [--json] [--verbose] [--date DATE]
                      [--date_start DATE_START] [--date_end DATE_END]
@@ -46,7 +46,7 @@ optional arguments:
   --api API             API key of the app
   --timer {PageLoad,FirstLastByte,FirstByte,DNS,TCP,SSL,DomLoad,DomReady,ClientRoundTripTime,TimeToInteractive,FirstInputDelay,TimeToFirstInteraction,TimeToVisuallyReady,FirstPaint,FirstContentfulPaint,LongTasksTime}
                         The timer to report (default=page load time)
-  --date_comparator {Last30Minutes,LastHour,Last3Hours,Last12Hours,Last24Hours,ThisWeek,ThisMonth,Last,Between}
+  --date-comparator {Last30Minutes,LastHour,Last3Hours,Last12Hours,Last24Hours,ThisWeek,ThisMonth,Last,Between}
                         Choose the way mPulse is going to report the data
   --type {summary,histogram,sessions-per-page-load-time,metric-per-page-load-time,by-minute,geography,page-groups,browsers,bandwidth,ab-tests,timers-metrics,metrics-by-dimension,dimension-values}
                         Choose the type of report to execute (default=Summary)
@@ -89,7 +89,7 @@ By adding the `date-comparator` with one of the following value, you should get 
 
 Here's the command to get the data for last 12 hours.
 
-	akamai mpulse --api XXXXX-XXXXX-XXXXX-XXXXX-XXXXX --date_comparator=Last12Hours
+	akamai mpulse --api XXXXX-XXXXX-XXXXX-XXXXX-XXXXX --date-comparator=Last12Hours
 
 ### Get different timer
 By default, we get the summary for _PageLoad_. You can use the `timer` to get other metrics as described in [timer parameters](https://developer.akamai.com/api/web_performance/mpulse_query/v2.html#TimerParameters). 
