@@ -1,0 +1,1 @@
+{"chartTitle": "Bandwidth Blocks", "chartTitleSuffix": null, "datasetName": "RumBandwidth", "reportType": "RumBandwidth", "resultName": null, "series": "{series: [{name: \"Bandwidth Blocks\",aPoints: [{x:\"(No Value)\",y:32862,label:\"(No Value)\",userdata:\"(No Value)\"}],pointCount:1,statistics:{yMin:32862.0,yMax:32862.0,ySum:32862.0,yAvg:32862.0}}]}"}
