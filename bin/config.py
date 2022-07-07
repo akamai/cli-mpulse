@@ -9,16 +9,12 @@ else:
      import httplib as http_client
 
 import argparse
-import logging
 import requests
 import json
 import mpulse_helper
 
-#setup logging
-logger = logging.getLogger("config.py")
-logging.basicConfig()
-logging.getLogger().setLevel(logging.DEBUG)
-#class MpulseConfig()
+import logging
+logger = logging.getLogger(__name__)
 
 def getCredentials(config_file, section_name):
     settings = {}
@@ -52,12 +48,12 @@ def generateToken(apitoken, tenant):
             if mpulse_helper.check_age(stat_result.st_ctime) < 300:            
                 with open(stored_security_token_file) as f:
                     security_token = json.loads(f.read())   
-                    logger.info("Read security credentials from file.")     
+                    logger.debug("Read security credentials from file.")     
         except Exception as e:
             logger.error("Unable to open stored credentials at " + stored_security_token_file + "\n" + str(e))
 
     if security_token == {}:  
-        logger.info("No stored credentials was used - invoking the call now..")  
+        logger.debug("No stored credentials was used - invoking the call now..")  
         token_url = "https://mpulse.soasta.com/concerto/services/rest/RepositoryService/v1/Tokens"
         payload = {"apiToken": apitoken}
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
@@ -71,7 +67,7 @@ def generateToken(apitoken, tenant):
             logger.error(response.headers)
         else:
             security_token = json.loads(response.text)
-            logger.info("received the token: " + json.dumps(security_token))
+            logger.debug("received the token: " + json.dumps(security_token))
 
     # finally, re-write the credentials so that we will get the next updated time
     try:
