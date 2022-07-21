@@ -124,7 +124,7 @@ On success, returns a value object built from a JSON response.
             response = http_response.json()
         else:
             log.error("HTTP Error" + str(http_response.status_code))
-            log.error(http_response.read())
+            log.error(http_response.content)
     except Exception as e:
         logging.error(str(e))
 
