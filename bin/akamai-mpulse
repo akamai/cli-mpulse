@@ -18,11 +18,13 @@ Akamai CLI interface to mPulse Query API
 '''
 import sys
 import os
+import time
 import argparse
 import config
 import json
 import requests
 import urllib
+import rich
 
 import mpulse_helper
 
@@ -40,7 +42,7 @@ def usage():
     p = os.path.basename(sys.argv[0])
     return f"""
 {p} - Akamai CLI for mPulse
-Usage: {p} --api <KEY> [options]
+Usage: {p} --api <KEY> [options] [<command>]
 Options:
   --debug <level>: Show debug output (INFO/ERROR/DEBUG)
   --config: Config file to use (~/.mpulse)
@@ -53,13 +55,17 @@ Options:
   --date_start <datetime>: Start date of the period
   --date_end <datetime>: End date of the period
   --date_comparator <spec>: Either of Today/LastHour/Last(3|12|24)Hours/ThisWeek/ThisMonth/...
-
+Commands:
+  stat - Report stats in a loop in dstat-style
 Examples:
-  $ KEY=24E42-E180-11EC-9EA7-73471
+  $ KEY=PH7E4-H9YBZ-6NM8T-L4UQK-ZJAPW
   $ {p} --api $KEY --timer PageLoad --date '2022-02-02'
   $ {p} --api $KEY --timer PageLoad --date_start '2022-02-01' --date_end '2022-03-01'
   $ {p} --api $KEY --timer PageLoad --date-comparator LastHour
   $ {p} --api $KEY --type timers-metrics --timer PageLoad --timer DomLoad --metric Beacons --metric BounceRate
+
+  // 'stat' mode for dstat-like repeated display
+  $ {p} --api $KEY --timer FirstByte --timer DomLoad --timer FirstInputDelay --timer PageLoad --timer LargestContentfulPaint --metric Beacons --date-comparator LastHour --type timers-metrics stat
 
 NOTES:
   - For report types, see https://developer.akamai.com/api/web_performance/mpulse_query/v2.html
@@ -130,6 +136,34 @@ On success, returns a value object built from a JSON response.
 
     return response
 
+# repeated moving average reporting mode
+def do_stat(opt, token):
+  hist = {}
+  step = 0;
+  while True:
+    ret = getApiResponse(opt, token)
+
+    xkeys = [i['id'] for i in ret['values']]
+    xvals = [i['latest'] for i in ret['values']]
+    xlens = [len(i['id']) for i in ret['values']]
+
+    # show header every 10 rows
+    if step == 0:
+      header = ''
+      for xk in xkeys:
+        header += f"[underline blue]{xk}[/] "
+      rich.print(header)
+
+    dataline = ''
+    for i in range(len(xvals)):
+      xv = str(xvals[i]).rjust(xlens[i], ' ')
+      dataline += f"{xv} "
+    rich.print(dataline)
+
+    time.sleep(60)
+
+    step = 0 if step == 10 else step + 1
+
 def cli():
     ap = argparse.ArgumentParser()
     ap.print_help = help
@@ -160,10 +194,19 @@ def cli():
     token = config.getToken(opt.config, opt.section)
     log.debug(token)
 
-    # fire the API call
-    response = getApiResponse(opt, token)
-    if response:
-        mpulse_helper.print_response(opt, response)
+    # for compatibility - no command mode
+    if len(opt.args) == 0:
+      # fire the API call
+      response = getApiResponse(opt, token)
+      if response:
+          mpulse_helper.print_response(opt, response)
+      return 0
+
+    cmd = opt.args[0]
+
+    # real-time moving average display
+    if cmd == 'stat':
+      do_stat(opt, token)
 
     return 0
 
